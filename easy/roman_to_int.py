@@ -26,18 +26,20 @@ I DID NOT SOLVE IT ON MY OWN.
 
 def roman_to_int(s):
     diction = dict(I=1, V=5, X=10, L=50, C=100, D=500, M=1000, O=0)
-    s += 'O'  # add 0 at start
+    s += 'O'  # needed for VI, XII etc.
     result = 0
-    i = 1
-    while i < len(s):
-        prev = diction[s[i]]
-        nxt = diction[s[i - 1]]
-        if prev > nxt:
-            result += (prev - nxt)
-            i += 2  # skip 2 slots after subtraction
+    skip = False
+    for i in range(1, len(s)):
+        if skip:
+            skip = False
+            continue
+        second = diction[s[i]]
+        first = diction[s[i - 1]]
+        if second > first:  # can subtract?
+            result += (second - first)
+            skip = True  # move further after subtracting
         else:
-            result += nxt
-            i += 1
+            result += first
     return result
 
 
